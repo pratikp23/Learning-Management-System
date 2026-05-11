@@ -8,7 +8,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { MdRemoveRedEye } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../utils/Firebase";
+import { auth, provider } from "../utils/Firebase";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
