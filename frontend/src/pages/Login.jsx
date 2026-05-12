@@ -78,7 +78,7 @@ function Login() {
   return (
     <div className="bg-purple-50 w-[100vw] h-[100vh] flex items-center justify-center flex-col gap-3">
       <form
-        className="w-[90%] md:w-[800px] h-[600px] bg-white shadow-xl rounded-2xl flex"
+        className="w-[90%] md:w-[800px] h-[600px] bg-white text-black shadow-xl rounded-2xl flex"
         onSubmit={(e) => e.preventDefault()}
       >
         {/* LEFT */}
@@ -97,7 +97,7 @@ function Login() {
             <label className="font-semibold text-black">Email</label>
             <input
               type="text"
-              className="border w-full h-[35px] px-3"
+              className="border border-gray-300 rounded w-full h-[35px] px-3 bg-white text-black outline-none focus:border-black"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -109,7 +109,7 @@ function Login() {
             <label className="font-semibold text-black">Password</label>
             <input
               type={show ? "text" : "password"}
-              className="border w-full h-[35px] px-3"
+              className="border border-gray-300 rounded w-full h-[35px] px-3 bg-white text-black outline-none focus:border-black"
               placeholder="********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -131,10 +131,10 @@ function Login() {
           {/* ROLE */}
           <div className="flex gap-3">
             <span
-              className={`px-3 py-1 border rounded cursor-pointer ${
+              className={`px-3 py-1 border border-gray-300 rounded cursor-pointer ${
                 role === "student"
                   ? "bg-black text-white"
-                  : "hover:bg-gray-100"
+                  : "hover:bg-gray-100 text-black"
               }`}
               onClick={() => setRole("student")}
             >
@@ -142,10 +142,10 @@ function Login() {
             </span>
 
             <span
-              className={`px-3 py-1 border rounded cursor-pointer ${
+              className={`px-3 py-1 border border-gray-300 rounded cursor-pointer ${
                 role === "educator"
                   ? "bg-black text-white"
-                  : "hover:bg-gray-100"
+                  : "hover:bg-gray-100 text-black"
               }`}
               onClick={() => setRole("educator")}
             >

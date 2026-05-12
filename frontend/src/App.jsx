@@ -34,7 +34,7 @@ import AIQuiz from './pages/AIQuiz'
 import MistakeEngine from './pages/MistakeEngine'
 import getAllReviews from './customHooks/getAllReviews'
 
-export const serverUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"
+export const serverUrl ="https://learning-management-system-96e4.onrender.com"
 
 function App() {
 
