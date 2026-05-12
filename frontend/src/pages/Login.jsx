@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.jpg";
+import google from "../assets/google.png"; // make sure this exists
+
 import { auth, provider } from "../utils/Firebase";
 import axios from "axios";
 import { serverUrl } from "../App";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdRemoveRedEye } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 
@@ -18,201 +19,179 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
-  let [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-  let dispatch = useDispatch();
+  const dispatch = useDispatch();
+
   const handleLogin = async () => {
     setLoading(true);
     try {
       const result = await axios.post(
         serverUrl + "/api/auth/login",
         { email, password },
-        { withCredentials: true },
+        { withCredentials: true }
       );
+
       dispatch(setUserData(result.data));
       const dest = location.state?.from?.pathname || "/";
       navigate(dest);
-      setLoading(false);
+
       toast.success("Login Successfully");
     } catch (error) {
       console.log(error);
+      toast.error(error?.response?.data?.message || "Login failed");
+    } finally {
       setLoading(false);
-      toast.error(error.response.data.message);
     }
   };
+
   const googleLogin = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
 
-      let user = response.user;
-      let name = user.displayName;
-      let email = user.email;
-      // Use the role selected in the UI state instead of an empty string
+      const user = response.user;
 
       const result = await axios.post(
         serverUrl + "/api/auth/googlesignup",
-        { name, email, role },
-        { withCredentials: true },
+        {
+          name: user.displayName,
+          email: user.email,
+          role,
+        },
+        { withCredentials: true }
       );
+
       dispatch(setUserData(result.data));
       const dest = location.state?.from?.pathname || "/";
       navigate(dest);
+
       toast.success("Login Successfully");
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Google login failed");
     }
   };
+
   return (
     <div className="bg-purple-50 w-[100vw] h-[100vh] flex items-center justify-center flex-col gap-3">
       <form
-        className="w-[90%] md:w-200 h-150 bg-[white] shadow-xl rounded-2xl flex"
+        className="w-[90%] md:w-[800px] h-[600px] bg-white shadow-xl rounded-2xl flex"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="md:w-[50%] w-[100%] h-[100%] flex flex-col items-center justify-center gap-4 ">
+        {/* LEFT */}
+        <div className="md:w-[50%] w-full flex flex-col items-center justify-center gap-4">
           <div>
             <h1 className="font-semibold text-black text-2xl">
               Welcome back
             </h1>
-            <h2 className="text-[#999797] text-[18px]">
+            <h2 className="text-gray-500 text-lg">
               Login to your account
             </h2>
           </div>
-          <div className="flex flex-col gap-1 w-[85%] items-start justify-center px-3">
-            <label
-              htmlFor="email"
-              className='font-semibold  text-black text-2xl"'
-            >
-              Email
-            </label>
+
+          {/* EMAIL */}
+          <div className="flex flex-col gap-1 w-[85%]">
+            <label className="font-semibold text-black">Email</label>
             <input
-              id="email"
               type="text"
-              className="border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px] text-black text-2xl "
+              className="border w-full h-[35px] px-3"
               placeholder="Enter your email"
-              onChange={(e) => setEmail(e.target.value)}
               value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          {/* recorrection of password*/}
-          <div className="flex flex-col gap-1 w-[85%] items-start justify-center px-3">
-            <label
-              htmlFor="password"
-              className='font-semibold  text-black text-2xl"'
-            >
-              Password
-            </label>
+          {/* PASSWORD */}
+          <div className="flex flex-col gap-1 w-[85%] relative">
+            <label className="font-semibold text-black">Password</label>
             <input
-              id="password"
               type={show ? "text" : "password"}
-              className="border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px] text-black text-2xl"
-              placeholder="***********"
-              onChange={(e) => setPassword(e.target.value)}
+              className="border w-full h-[35px] px-3"
+              placeholder="********"
               value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            {!show && (
+
+            {!show ? (
               <MdOutlineRemoveRedEye
-                className="absolute w-[20px] h-[20px] cursor-pointer right-[5%] bottom-[10%]"
-                onClick={() => setShow((prev) => !prev)}
+                className="absolute right-3 top-9 cursor-pointer"
+                onClick={() => setShow(true)}
               />
-            )}
-            {show && (
+            ) : (
               <MdRemoveRedEye
-                className="absolute w-[20px] h-[20px] cursor-pointer right-[5%] bottom-[10%]"
-                onClick={() => setShow((prev) => !prev)}
+                className="absolute right-3 top-9 cursor-pointer"
+                onClick={() => setShow(false)}
               />
             )}
           </div>
-{/* 
-          <div className="flex flex-col gap-1 w-[85%] items-start justify-center px-3 relative">
-            <label
-              htmlFor="password"
-              className="font-semibold  text-[black] text-2xl"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type={show ? "text" : "password"}
-              className="border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px] text-[black] text-2xl"
-              placeholder="***********"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
-            {!show && (
-              <MdOutlineRemoveRedEye
-                className="absolute w-[20px] h-[20px] cursor-pointer right-[5%] bottom-[10%]"
-                onClick={() => setShow((prev) => !prev)}
-              />
-            )}
-            {show && (
-              <MdRemoveRedEye
-                className="absolute w-[20px] h-[20px] cursor-pointer right-[5%] bottom-[10%]"
-                onClick={() => setShow((prev) => !prev)}
-              />
-            )}
-          </div> */}
 
-          <div className="flex md:w-[50%] w-[70%] items-center justify-between">
+          {/* ROLE */}
+          <div className="flex gap-3">
             <span
-              className={`px-[10px] py-[5px] border border-gray-500 text-black rounded-2xl cursor-pointer transition-all duration-300  ${role === "student" ? "border-black bg-black text-white" : "border-[#c13232] hover:border-black hover:bg-gray-100"}`}
+              className={`px-3 py-1 border rounded cursor-pointer ${
+                role === "student"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }`}
               onClick={() => setRole("student")}
             >
               Student
             </span>
+
             <span
-              className={`px-[10px] py-[5px] border border-gray-500 text-black rounded-2xl cursor-pointer transition-all duration-300 ${role === "educator" ? "border-black bg-black text-white" : "border-[#646464] hover:border-black hover:bg-gray-100"}`}
+              className={`px-3 py-1 border rounded cursor-pointer ${
+                role === "educator"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }`}
               onClick={() => setRole("educator")}
             >
               Educator
             </span>
           </div>
 
+          {/* LOGIN BUTTON */}
           <button
-            className="w-[80%] h-[40px] bg-black text-white cursor-pointer flex items-center justify-center rounded-[5px]"
-            disabled={loading}
+            className="w-[80%] h-[40px] bg-black text-white rounded"
             onClick={handleLogin}
+            disabled={loading}
           >
-            {loading ? <ClipLoader size={30} color="white" /> : "Login"}
+            {loading ? <ClipLoader size={20} color="white" /> : "Login"}
           </button>
+
           <span
-            className="text-[13px] cursor-pointer text-[#585757]"
+            className="text-sm cursor-pointer text-gray-500"
             onClick={() => navigate("/forgotpassword")}
           >
-            Forget your password?
+            Forgot password?
           </span>
 
-          <div className="w-[80%] flex items-center gap-2">
-            <div className="w-[25%] h-[0.5px] bg-[#c4c4c4]"></div>
-            <div className="w-[50%] text-[15px] text-[#999797] flex items-center justify-center ">
-              Or continue with
-            </div>
-            <div className="w-[25%] h-[0.5px] bg-[#c4c4c4]"></div>
-          </div>
-
+          {/* GOOGLE */}
           <div
-            className="w-[80%] h-[40px] border-1 border-black rounded-[5px] flex items-center justify-center cursor-pointer "
+            className="w-[80%] h-[40px] border flex items-center justify-center gap-2 cursor-pointer"
             onClick={googleLogin}
           >
-            <img src={google} alt="" className="w-[25px]" />
-            <span className="text-[18px] text-gray-500">oogle</span>{" "}
+            <img src={google} alt="google" className="w-5" />
+            <span className="text-gray-500">Google</span>
           </div>
-          <div className="text-[#6f6f6f]">
+
+          <div className="text-gray-500">
             Don't have an account?{" "}
             <span
-              className="underline underline-offset-1 text-black cursor-pointer"
+              className="underline text-black cursor-pointer"
               onClick={() => navigate("/signup")}
             >
               Sign up
             </span>
           </div>
         </div>
-        <div className="w-[50%] h-[100%] rounded-r-2xl bg-[black] md:flex items-center justify-center flex-col hidden">
-          <img src={logo} className="w-30 shadow-2xl" alt="" />
-          <span className="text-[white] text-2xl"></span>
+
+        {/* RIGHT */}
+        <div className="w-[50%] bg-black hidden md:flex flex-col items-center justify-center rounded-r-2xl">
+          <img src={logo} className="w-20" alt="logo" />
         </div>
       </form>
     </div>
@@ -220,3 +199,4 @@ function Login() {
 }
 
 export default Login;
+
