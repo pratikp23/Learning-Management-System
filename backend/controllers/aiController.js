@@ -9,8 +9,12 @@ const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/
 
 const callGemini = async (prompt) => {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("GEMINI_API_KEY missing");
-
+    if (!apiKey) {
+        const errMsg = 'GEMINI_API_KEY is missing in environment variables';
+        console.error(errMsg);
+        fs.appendFileSync('debug_ai.txt', `Gemini Config Error: ${errMsg}\n`);
+        throw new Error(errMsg);
+    }
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
@@ -20,7 +24,6 @@ const callGemini = async (prompt) => {
             maxOutputTokens: 2048,
         }
     };
-
     try {
         const response = await axios.post(`${GEMINI_API_URL}?key=${apiKey}`, payload, {
             headers: { "Content-Type": "application/json" }

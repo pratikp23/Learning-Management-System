@@ -20,13 +20,10 @@ app.use(cookieParser())
 
 // Allow frontend URL (configure for deployment via env)
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://learning-management-system-cggj-lp6pntv6o.vercel.app",
-    "https://learning-management-sys-git-c87077-palakvishwakarma44s-projects.vercel.app"
-  ],
-  credentials: true
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  optionsSuccessStatus: 200
 }));
 
 app.use("/api/auth", authRouter)
