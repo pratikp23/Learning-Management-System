@@ -1,3 +1,4 @@
+console.log("API KEY =", import.meta.env.VITE_FIREBASE_API_KEY);
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
