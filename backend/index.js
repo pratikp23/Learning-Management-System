@@ -17,19 +17,28 @@ let app = express()
 
 // ---- CORS MUST BE THE FIRST MIDDLEWARE ----
 const allowedOrigins = [
-  "https://learning-management-system-nine-bay.vercel.app"
+  "https://learning-management-system-nine-bay.vercel.app",
+  "http://localhost:3000"
 ];
+
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? allowedOrigins
-        : true, // dev: allow any origin
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl) or when not in production
+      if (!origin) return callback(null, true);
+      if (process.env.NODE_ENV !== "production" || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"), false);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
   })
 );
+
+// Enable preflight for all routes
+app.options("*", cors());
 // ------------------------------------------------
 
 app.use(express.json());
