@@ -8,6 +8,10 @@ dotenv.config();
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent";
 
 const callGemini = async (prompt) => {
+    return callGeminiMultimodal(prompt);
+};
+
+const callGeminiMultimodal = async (prompt, imagePath = null) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
         const errMsg = 'GEMINI_API_KEY is missing in environment variables';
@@ -15,8 +19,24 @@ const callGemini = async (prompt) => {
         fs.appendFileSync('debug_ai.txt', `Gemini Config Error: ${errMsg}\n`);
         throw new Error(errMsg);
     }
+
+    const parts = [{ text: prompt }];
+    
+    if (imagePath && fs.existsSync(imagePath)) {
+        const imageBuffer = fs.readFileSync(imagePath);
+        const base64Image = imageBuffer.toString('base64');
+        const mimeType = imagePath.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        
+        parts.push({
+            inline_data: {
+                mime_type: mimeType,
+                data: base64Image
+            }
+        });
+    }
+
     const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
+        contents: [{ parts }],
         generationConfig: {
             temperature: 0.7,
             topK: 40,
@@ -24,6 +44,7 @@ const callGemini = async (prompt) => {
             maxOutputTokens: 2048,
         }
     };
+
     try {
         const response = await axios.post(`${GEMINI_API_URL}?key=${apiKey}`, payload, {
             headers: { "Content-Type": "application/json" }
@@ -306,14 +327,17 @@ export const analyzeMistakes = async (req, res) => {
 export const analyzeResume = async (req, res) => {
     try {
         const { resumeText, jobDescription } = req.body;
-        if (!resumeText) return res.status(400).json({ message: "Resume text is required" });
+        const resumeFile = req.file;
+
+        if (!resumeText && !resumeFile) {
+            return res.status(400).json({ message: "Please provide resume text or upload an image." });
+        }
 
         const prompt = `
         You are an expert Technical Recruiter and ATS (Applicant Tracking System) software.
-        I am providing you with a candidate's resume text${jobDescription ? " and a target Job Description" : ""}.
+        I am providing you with a candidate's resume (as ${resumeFile ? "an image" : "text"})${jobDescription ? " and a target Job Description" : ""}.
         
-        Resume Text:
-        """${resumeText}"""
+        ${resumeText ? `Resume Text:\n"""${resumeText}"""` : "Please analyze the provided resume image."}
         ${jobDescription ? `\nJob Description:\n"""${jobDescription}"""` : ""}
 
         Task:
@@ -331,11 +355,23 @@ export const analyzeResume = async (req, res) => {
         }
         `;
 
-        const aiText = await callGemini(prompt);
+        const aiText = await callGeminiMultimodal(prompt, resumeFile?.path);
+        
+        // Clean up uploaded file if it exists
+        if (resumeFile && fs.existsSync(resumeFile.path)) {
+            fs.unlinkSync(resumeFile.path);
+        }
+
         const data = parseJsonFromAi(aiText);
         return res.status(200).json(data);
     } catch (error) {
         console.error("AI Resume Analyzer Error:", error);
+        
+        // Cleanup on error
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        
         return res.status(500).json({ message: "Failed to analyze resume" });
     }
 };

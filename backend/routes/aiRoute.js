@@ -1,5 +1,6 @@
 import express from "express"
 import isAuth from "../middlewares/isAuth.js"
+import upload from "../middlewares/multer.js"
 import { 
     searchWithAi, 
     generateRoadmap, 
@@ -22,6 +23,6 @@ aiRouter.post("/generate-study-plan", generateStudyPlan)
 aiRouter.post("/generate-quiz", generateQuiz)
 aiRouter.post("/track-mistake", isAuth, trackMistake)
 aiRouter.get("/analyze-mistakes", isAuth, analyzeMistakes)
-aiRouter.post("/resume-analyzer", analyzeResume)
+aiRouter.post("/resume-analyzer", upload.single('resumeImage'), analyzeResume)
 
 export default aiRouter

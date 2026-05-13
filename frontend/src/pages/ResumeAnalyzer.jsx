@@ -2,17 +2,37 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { serverUrl } from '../App';
-import { FaFileAlt, FaBriefcase, FaCheckCircle, FaExclamationCircle, FaLightbulb, FaSpinner } from 'react-icons/fa';
+import { FaFileAlt, FaBriefcase, FaCheckCircle, FaExclamationCircle, FaLightbulb, FaSpinner, FaImage, FaTrash } from 'react-icons/fa';
 
 function ResumeAnalyzer() {
   const [resumeText, setResumeText] = useState('');
+  const [resumeImage, setResumeImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+      setResumeImage(file);
+      setImagePreview(URL.createObjectURL(file));
+      setResumeText(''); // Clear text if image is selected
+    }
+  };
+
+  const removeImage = () => {
+    setResumeImage(null);
+    setImagePreview(null);
+  };
+
   const handleAnalyze = async () => {
-    if (!resumeText.trim()) {
-      toast.error('Please paste your resume text');
+    if (!resumeText.trim() && !resumeImage) {
+      toast.error('Please paste your resume text or upload an image');
       return;
     }
 
@@ -20,9 +40,16 @@ function ResumeAnalyzer() {
     setResult(null);
 
     try {
-      const response = await axios.post(`${serverUrl}/api/ai/resume-analyzer`, {
-        resumeText,
-        jobDescription
+      const formData = new FormData();
+      if (resumeImage) {
+        formData.append('resumeImage', resumeImage);
+      } else {
+        formData.append('resumeText', resumeText);
+      }
+      formData.append('jobDescription', jobDescription);
+
+      const response = await axios.post(`${serverUrl}/api/ai/resume-analyzer`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       setResult(response.data);
       toast.success('Resume analyzed successfully!');
@@ -46,21 +73,59 @@ function ResumeAnalyzer() {
               AI Resume Analyzer
             </h1>
             <p className="text-gray-400 mb-8 text-sm">
-              Paste your resume and an optional job description to get an ATS match score and actionable feedback.
+              Upload an image of your resume or paste the text to get an ATS match score and actionable feedback.
             </p>
 
             <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2 uppercase tracking-widest">
-                  Paste Resume Text *
-                </label>
-                <textarea
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-[var(--neon-blue)] focus:ring-1 focus:ring-[var(--neon-blue)] transition-all h-64 custom-scrollbar"
-                  placeholder="Paste your entire resume content here..."
-                  value={resumeText}
-                  onChange={(e) => setResumeText(e.target.value)}
-                />
-              </div>
+              {/* Image Upload Area */}
+              {!resumeText && (
+                <div className="space-y-2">
+                  <label className="block text-sm font-bold text-gray-300 mb-2 uppercase tracking-widest">
+                    Upload Resume Image
+                  </label>
+                  {!imagePreview ? (
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-[var(--neon-blue)]/50 transition-all bg-black/20 group">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <FaImage className="text-3xl text-gray-600 group-hover:text-[var(--neon-blue)] transition-colors mb-2" />
+                        <p className="text-sm text-gray-500">Click to upload (JPG, PNG)</p>
+                      </div>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                    </label>
+                  ) : (
+                    <div className="relative rounded-2xl overflow-hidden border border-[var(--neon-blue)]/30 group">
+                      <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover" />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button onClick={removeImage} className="bg-red-500 text-white p-3 rounded-full hover:bg-red-600 transition-colors">
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Text Area */}
+              {!resumeImage && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-bold text-gray-300 uppercase tracking-widest">
+                      Paste Resume Text
+                    </label>
+                    {resumeText && (
+                      <button onClick={() => setResumeText('')} className="text-[10px] text-red-400 hover:text-red-300 font-bold uppercase tracking-tighter">Clear</button>
+                    )}
+                  </div>
+                  <textarea
+                    className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-[var(--neon-blue)] focus:ring-1 focus:ring-[var(--neon-blue)] transition-all h-64 custom-scrollbar"
+                    placeholder="Or paste your entire resume content here..."
+                    value={resumeText}
+                    onChange={(e) => {
+                      setResumeText(e.target.value);
+                      if (e.target.value) removeImage();
+                    }}
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2 uppercase tracking-widest flex items-center gap-2">
@@ -111,7 +176,7 @@ function ResumeAnalyzer() {
           )}
 
           {result && !loading && (
-            <div className="glass-card p-8 rounded-3xl border border-white/5 space-y-8 animate-fade-in relative overflow-hidden">
+            <div className="glass-card p-8 rounded-3xl border border-white/5 space-y-8 animate-fade-in relative overflow-hidden h-fit">
               
               {/* Background gradient blob for score */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--neon-blue)] opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
@@ -203,3 +268,4 @@ function ResumeAnalyzer() {
 }
 
 export default ResumeAnalyzer;
+
