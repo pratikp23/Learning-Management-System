@@ -47,6 +47,14 @@ const AIHub = () => {
       path: "/error-tracker",
       color: "from-yellow-400 to-orange-400",
       status: "Available"
+    },
+    {
+      title: "AI Resume Analyzer",
+      description: "Paste your resume and job description to get an ATS score and feedback.",
+      icon: <FiMap size={24} />,
+      path: "/resume-analyzer",
+      color: "from-blue-400 to-indigo-500",
+      status: "Available"
     }
   ];
 

@@ -32,6 +32,7 @@ import InterviewSimulator from './pages/InterviewSimulator'
 import StudyPlanner from './pages/StudyPlanner'
 import AIQuiz from './pages/AIQuiz'
 import MistakeEngine from './pages/MistakeEngine'
+import ResumeAnalyzer from './pages/ResumeAnalyzer'
 import getAllReviews from './customHooks/getAllReviews'
 
 export const serverUrl ="https://learning-management-system-96e4.onrender.com"
@@ -66,7 +67,7 @@ function App() {
         <Route path='/study-planner' element={userData ? <StudyPlanner /> : <Navigate to={"/signup"} />} />
         <Route path='/quiz' element={userData ? <AIQuiz /> : <Navigate to={"/signup"} />} />
         <Route path='/error-tracker' element={userData ? <MistakeEngine /> : <Navigate to={"/signup"} />} />
-
+        <Route path='/resume-analyzer' element={userData ? <ResumeAnalyzer /> : <Navigate to={"/signup"} />} />
 
         <Route path='/dashboard' element={userData?.role === "educator" ? <Dashboard /> : <Navigate to={"/signup"} />} />
         <Route path='/courses' element={userData?.role === "educator" ? <Courses /> : <Navigate to={"/signup"} />} />

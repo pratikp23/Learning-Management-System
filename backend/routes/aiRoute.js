@@ -8,7 +8,8 @@ import {
     generateStudyPlan,
     generateQuiz,
     trackMistake,
-    analyzeMistakes
+    analyzeMistakes,
+    analyzeResume
 } from "../controllers/aiController.js"
 
 let aiRouter = express.Router()
@@ -21,5 +22,6 @@ aiRouter.post("/generate-study-plan", generateStudyPlan)
 aiRouter.post("/generate-quiz", generateQuiz)
 aiRouter.post("/track-mistake", isAuth, trackMistake)
 aiRouter.get("/analyze-mistakes", isAuth, analyzeMistakes)
+aiRouter.post("/resume-analyzer", analyzeResume)
 
 export default aiRouter

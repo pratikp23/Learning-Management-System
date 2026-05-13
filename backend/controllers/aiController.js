@@ -302,3 +302,40 @@ export const analyzeMistakes = async (req, res) => {
         return res.status(500).json({ message: "Failed to analyze mistakes" });
     }
 };
+
+export const analyzeResume = async (req, res) => {
+    try {
+        const { resumeText, jobDescription } = req.body;
+        if (!resumeText) return res.status(400).json({ message: "Resume text is required" });
+
+        const prompt = `
+        You are an expert Technical Recruiter and ATS (Applicant Tracking System) software.
+        I am providing you with a candidate's resume text${jobDescription ? " and a target Job Description" : ""}.
+        
+        Resume Text:
+        """${resumeText}"""
+        ${jobDescription ? `\nJob Description:\n"""${jobDescription}"""` : ""}
+
+        Task:
+        1. Calculate an ATS Match Score from 0 to 100 based on how well the resume matches the job description (or general tech industry standards if no JD is provided).
+        2. Identify 3-5 key Strengths of the resume.
+        3. Identify 3-5 Weaknesses or Missing Keywords.
+        4. Provide 3 actionable Tips for improvement.
+
+        Return ONLY valid JSON in this exact format:
+        {
+          "score": 85,
+          "strengths": ["...", "..."],
+          "weaknesses": ["...", "..."],
+          "tips": ["...", "..."]
+        }
+        `;
+
+        const aiText = await callGemini(prompt);
+        const data = parseJsonFromAi(aiText);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.error("AI Resume Analyzer Error:", error);
+        return res.status(500).json({ message: "Failed to analyze resume" });
+    }
+};
