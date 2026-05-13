@@ -21,24 +21,24 @@ const allowedOrigins = [
   "http://localhost:3000"
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl) or when not in production
-      if (!origin) return callback(null, true);
-      if (process.env.NODE_ENV !== "production" || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"), false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    optionsSuccessStatus: 200,
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl) or when not in production
+    if (!origin) return callback(null, true);
+    if (process.env.NODE_ENV !== "production" || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"), false);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Enable preflight for all routes
-app.options("*", cors());
+app.options("*", cors(corsOptions));
 // ------------------------------------------------
 
 app.use(express.json());
