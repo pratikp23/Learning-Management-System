@@ -1,2 +1,15 @@
 .env
 node_modules
+
+# Dependencies
+node_modules/
+
+# Environment variables (Sabse important security!)
+.env
+
+# Logs (Baar-baar change hone waali faltu file ko rokne ke liye)
+debug_log
+*.log
+
+# Scratch / Rough work folder (Interviewers ko clean code dikhane ke liye)
+scratch/
