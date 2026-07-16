@@ -7,45 +7,55 @@ import User from "../models/userModel.js"
 import sendMail from "../configs/Mail.js"
 
 
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/signup
+ * @access  Public
+ */
 export const signUp=async (req,res)=>{
  
     try {
          console.log("Login body:", req.body)
-        let {name,email,password,role}= req.body
-        let existUser= await User.findOne({email})
-        if(existUser){
-            return res.status(400).json({message:"email already exist"})
-        }
-        if(!validator.isEmail(email)){
-            return res.status(400).json({message:"Please enter valid Email"})
-        }
-        if(password.length < 8){
-            return res.status(400).json({message:"Please enter a Strong Password"})
-        }
-        
-        let hashPassword = await bcrypt.hash(password,10)
-        let user = await User.create({
-            name ,
-            email ,
-            password:hashPassword ,
-            role,
-           
-            })
-        let token = await genToken(user._id)
-        res.cookie("token",token,{
-            httpOnly:true,
-            secure:true,
-            sameSite:"none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
-        return res.status(201).json(user)
-
+         let {name,email,password,role}= req.body
+         let existUser= await User.findOne({email})
+         if(existUser){
+             return res.status(400).json({message:"email already exist"})
+         }
+         if(!validator.isEmail(email)){
+             return res.status(400).json({message:"Please enter valid Email"})
+         }
+         if(password.length < 8){
+             return res.status(400).json({message:"Please enter a Strong Password"})
+         }
+         
+         let hashPassword = await bcrypt.hash(password,10)
+         let user = await User.create({
+             name ,
+             email ,
+             password:hashPassword ,
+             role,
+            
+             })
+         let token = await genToken(user._id)
+         res.cookie("token",token,{
+             httpOnly:true,
+             secure:process.env.NODE_ENV === "production",
+             sameSite:"none",
+             maxAge: 7 * 24 * 60 * 60 * 1000
+         })
+         return res.status(201).json(user)
+ 
     } catch (error) {
-        console.log("signUp error")
-        return res.status(500).json({message:`signUp Error ${error}`})
+         console.log("signUp error")
+         return res.status(500).json({message:`signUp Error ${error}`})
     }
 }
 
+/**
+ * @desc    Authenticate user & set session cookie
+ * @route   POST /api/auth/login
+ * @access  Public
+ */
 export const login=async(req,res)=>{
     try {
         let {email,password}= req.body
@@ -62,7 +72,7 @@ export const login=async(req,res)=>{
         let token =await genToken(user._id)
         res.cookie("token",token,{
             httpOnly:true,
-            secure:true,
+            secure:process.env.NODE_ENV === "production",
             sameSite:"none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
@@ -99,7 +109,7 @@ export const googleSignup = async (req,res) => {
         let token =await genToken(user._id)
         res.cookie("token",token,{
             httpOnly:true,
-            secure:true,
+            secure:process.env.NODE_ENV === "production",
             sameSite:"none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })

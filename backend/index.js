@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+import mongoose from "mongoose"
 import connectDb from "./configs/db.js"
 import authRouter from "./routes/authRoute.js"
 import cookieParser from "cookie-parser"
@@ -53,6 +54,14 @@ app.use("/api/review", reviewRouter)
 
 app.get("/", (req, res) => {
     res.send("Hello From Server")
+})
+
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        database: mongoose.connection.readyState === 1 ? "CONNECTED" : "DISCONNECTED",
+        timestamp: new Date()
+    })
 })
 
 app.listen(port, () => {
