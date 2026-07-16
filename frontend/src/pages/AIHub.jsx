@@ -59,7 +59,7 @@ const AIHub = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--primary-bg)] text-white font-['Outfit']">
+    <div className="min-h-screen bg-[var(--primary-bg)] text-white font-['Outfit'] ai-hub-page">
       <Nav />
       
       <div className="pt-32 pb-24 px-6">

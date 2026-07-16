@@ -11,8 +11,8 @@ const Footer = () => {
         {/* Logo + Description */}
         <div className="lg:w-[35%] w-full">
           <div className="flex items-center gap-3 mb-4 cursor-pointer" onClick={() => navigate("/")}>
-            <img src={logo} alt="Logo" className="h-12 w-12 rounded-full border-2 border-[var(--neon-blue)] shadow-[0_0_15px_rgba(0,243,255,0.3)]" />
-            <span className="text-2xl font-bold text-white tracking-wide">Learn<span className="text-[var(--neon-blue)]">AI</span></span>
+            <img src={logo} alt="Logo" className="h-12 w-12 rounded-full border-2 border-[var(--neon-blue)] shadow-[0_0_15px_rgba(95,141,78,0.2)]" />
+            <span className="text-2xl font-bold text-white tracking-wide">Learn<span className="text-[#3d2110]">AI</span></span>
           </div>
 
           <p className="text-gray-400 text-sm leading-relaxed max-w-sm">

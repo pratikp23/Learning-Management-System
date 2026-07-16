@@ -136,7 +136,7 @@ function ViewLecture() {
                 className="w-14 h-14 rounded-2xl object-cover border border-white/10"
               />
               <div className="overflow-hidden">
-                <h4 className="text-white font-bold truncate">{creatorData?.name || "SkillUp Mentor"}</h4>
+                <h4 className="text-white font-bold truncate">{creatorData?.name || "LearnAI Mentor"}</h4>
                 <p className="text-[10px] text-gray-500 font-medium uppercase tracking-tighter truncate">
                   {creatorData?.description || 'Subject Matter Expert'}
                 </p>

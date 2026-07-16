@@ -49,12 +49,15 @@ function Nav() {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate("/")}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
             <img
               src={logo}
-              className="w-[50px] rounded-full border-2 border-[var(--neon-blue)] shadow-[0_0_15px_rgba(0,243,255,0.3)] hover:scale-105 transition-transform"
+              className="w-[50px] rounded-full border-2 border-[var(--neon-blue)] shadow-[0_0_15px_rgba(95,141,78,0.2)] hover:scale-105 transition-transform"
               alt="Logo"
             />
+            <span className="text-2xl font-bold text-white tracking-wide">
+              Learn<span className="text-[#3d2110]">AI</span>
+            </span>
           </div>
 
           {/* Desktop Menu */}

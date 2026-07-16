@@ -161,25 +161,25 @@ function AddCourses() {
                                     <div className="space-y-2">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Category</label>
                                         <select className="w-full px-5 py-4 input-dark rounded-xl font-medium appearance-none cursor-pointer" onChange={(e) => setCategory(e.target.value)} value={category} required>
-                                            <option value="" className="bg-[#1a1a1a]">Select Category</option>
-                                            <option value="App Development" className="bg-[#1a1a1a]">App Development</option>
-                                            <option value="AI/ML" className="bg-[#1a1a1a]">AI/ML</option>
-                                            <option value="AI Tools" className="bg-[#1a1a1a]">AI Tools</option>
-                                            <option value="Data Science" className="bg-[#1a1a1a]">Data Science</option>
-                                            <option value="Data Analytics" className="bg-[#1a1a1a]">Data Analytics</option>
-                                            <option value="Ethical Hacking" className="bg-[#1a1a1a]">Ethical Hacking</option>
-                                            <option value="UI UX Designing" className="bg-[#1a1a1a]">UI UX Designing</option>
-                                            <option value="Web Development" className="bg-[#1a1a1a]">Web Development</option>
-                                            <option value="Others" className="bg-[#1a1a1a]">Others</option>
+                                            <option value="">Select Category</option>
+                                            <option value="App Development">App Development</option>
+                                            <option value="AI/ML">AI/ML</option>
+                                            <option value="AI Tools">AI Tools</option>
+                                            <option value="Data Science">Data Science</option>
+                                            <option value="Data Analytics">Data Analytics</option>
+                                            <option value="Ethical Hacking">Ethical Hacking</option>
+                                            <option value="UI UX Designing">UI UX Designing</option>
+                                            <option value="Web Development">Web Development</option>
+                                            <option value="Others">Others</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Level</label>
                                         <select className="w-full px-5 py-4 input-dark rounded-xl font-medium appearance-none cursor-pointer" onChange={(e) => setLevel(e.target.value)} value={level} required>
-                                            <option value="" className="bg-[#1a1a1a]">Select Level</option>
-                                            <option value="Beginner" className="bg-[#1a1a1a]">Beginner</option>
-                                            <option value="Intermediate" className="bg-[#1a1a1a]">Intermediate</option>
-                                            <option value="Advanced" className="bg-[#1a1a1a]">Advanced</option>
+                                            <option value="">Select Level</option>
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">

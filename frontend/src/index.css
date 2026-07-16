@@ -1,14 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --primary-bg: #0f0c29;
-  --secondary-bg: #302b63;
-  --accent-color: #24243e;
-  --neon-blue: #00f3ff;
-  --neon-purple: #bc13fe;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --primary-bg: #F5EFE6;
+  --secondary-bg: #EADBC8;
+  --accent-color: #8B6B4A;
+  --neon-blue: #5F8D4E;       /* Primary brand green instead of neon blue */
+  --neon-purple: #7A9D54;     /* Sage green instead of neon purple */
+  --deep-green: #3E5F44;
+  --dark-brown: #5C4033;
+  --body-text: #2F2F2F;
+  --glass-bg: rgba(255, 253, 249, 0.7);
+  --glass-border: rgba(95, 141, 78, 0.18);
 }
 
 * {
@@ -17,12 +20,139 @@
 }
 
 body {
-  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #000000, #434343);
+  background: linear-gradient(-45deg, #F5EFE6, #EADBC8, #F5EFE6, #EADBC8);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
-  color: #fff;
+  color: var(--body-text);
   min-height: 100vh;
+  position: relative;
 }
+
+/* Spotlight Lighting Overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 450px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(95, 141, 78, 0.08),
+    transparent 80%
+  );
+  z-index: 9999;
+}
+
+/* Headings Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  color: var(--dark-brown) !important;
+}
+
+/* Code block typography */
+code, pre {
+  font-family: 'Fira Code', monospace !important;
+}
+
+/* Smart text contrast translation layer */
+.text-white,
+.text-gray-50,
+.text-gray-100,
+.text-gray-200,
+.text-gray-300,
+.text-gray-400,
+.text-slate-50,
+.text-slate-100,
+.text-slate-200,
+.text-slate-300,
+.text-slate-400,
+.text-zinc-50,
+.text-zinc-100,
+.text-zinc-200,
+.text-zinc-300,
+.text-zinc-400,
+.text-neutral-50,
+.text-neutral-100,
+.text-neutral-200,
+.text-neutral-300,
+.text-neutral-400 {
+  color: var(--body-text) !important;
+}
+
+/* Specific styling hierarchies for secondary text elements */
+.text-gray-500,
+.text-slate-500,
+.text-zinc-500 {
+  color: var(--accent-color) !important; /* Oak brown for secondary labels */
+}
+
+.text-gray-600,
+.text-slate-600,
+.text-zinc-600 {
+  color: var(--neon-purple) !important; /* Sage green for metadata */
+}
+
+/* Headings text color override */
+h1.text-white, h2.text-white, h3.text-white, h4.text-white, h5.text-white, h6.text-white {
+  color: var(--dark-brown) !important;
+}
+
+/* Hover states for links and navigation menu items */
+.hover\:text-white:hover,
+[class*="hover:text-white"]:hover {
+  color: var(--neon-blue) !important;
+}
+
+/* Ensure button / badge / active state text remains white on solid dark elements */
+.bg-black,
+.bg-black *,
+[class*="bg-gradient"],
+[class*="bg-gradient"] *,
+[class*="bg-[var(--deep-green)]"],
+[class*="bg-[var(--deep-green)]"] * {
+  color: #FFFDF9 !important;
+}
+
+/* Base button transition */
+button {
+  transition: all 0.3s ease;
+}
+
+/* Outline / Transparent buttons styling for light background readability */
+button[class*="bg-transparent"],
+button[class*="bg-white/5"],
+button:not([class*="bg-"]):not([class*="bg-gradient"]):not(.bg-white) {
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--neon-blue) !important;
+  color: var(--neon-blue) !important;
+}
+
+button[class*="bg-transparent"] *,
+button[class*="bg-white/5"] *,
+button:not([class*="bg-"]):not([class*="bg-gradient"]):not(.bg-white) * {
+  color: var(--neon-blue) !important;
+}
+
+/* Solid buttons styling */
+button[class*="bg-gradient"],
+button.bg-black,
+button[class*="bg-[var(--neon-blue)]"],
+button[class*="bg-[var(--neon-purple)]"] {
+  background-color: var(--neon-blue) !important;
+  border-color: var(--neon-blue) !important;
+  color: #FFFDF9 !important;
+}
+
+/* Universal hover state for buttons */
+button:hover,
+button:hover * {
+  background-color: var(--deep-green) !important;
+  border-color: var(--deep-green) !important;
+  color: #FFFDF9 !important;
+}
+
 
 @keyframes gradientBG {
   0% { background-position: 0% 50%; }
@@ -45,41 +175,41 @@ body {
 }
 
 .text-shadow-xl {
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+  text-shadow: 0 0 10px rgba(95, 141, 78, 0.3);
 }
 
 /* Glassmorphism Utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(95, 141, 78, 0.05);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px rgba(95, 141, 78, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 40px rgba(0, 243, 255, 0.1);
-  border-color: rgba(0, 243, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(95, 141, 78, 0.12);
+  border-color: rgba(95, 141, 78, 0.3);
 }
 
 .neon-border {
   border: 1px solid var(--neon-blue);
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+  box-shadow: 0 0 10px rgba(95, 141, 78, 0.2);
 }
 
 .neon-border-purple {
   border: 1px solid var(--neon-purple);
-  box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+  box-shadow: 0 0 10px rgba(122, 157, 84, 0.2);
 }
 
 /* Animations */
@@ -102,7 +232,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(to right, #00f3ff, #bc13fe);
+  background: linear-gradient(to right, var(--deep-green), var(--accent-color));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -116,20 +246,193 @@ body {
 }
 
 .btn-glow:hover {
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+  box-shadow: 0 0 20px rgba(95, 141, 78, 0.4);
   transform: scale(1.02);
 }
 
+/* Universal Inputs overrides */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
 .input-dark {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--body-text) !important;
   transition: all 0.3s ease;
 }
 
+input:focus,
+textarea:focus,
 .input-dark:focus {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+  border-color: var(--neon-blue) !important;
+  box-shadow: 0 0 10px rgba(95, 141, 78, 0.15) !important;
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 253, 249, 0.85) !important;
+}
+
+input::placeholder,
+textarea::placeholder,
+.input-dark::placeholder {
+  color: var(--accent-color) !important;
+  opacity: 0.6;
+}
+
+/* Home Page Background Overlay overrides - transparent since mask handles the fade */
+[class*="via-[rgba(15,12,41,0.7)]"] {
+  background-image: none !important;
+}
+
+/* Soften the hero background image for light theme with smooth mask fade */
+.min-h-screen img.opacity-60 {
+  opacity: 0.35 !important;
+  filter: none !important;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%) !important;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%) !important;
+}
+
+
+
+
+
+
+
+
+/* Glow overrides */
+[class*="drop-shadow-[0_0_25px_rgba(0,243,255,0.6)]"] {
+  filter: drop-shadow(0 0 25px rgba(95, 141, 78, 0.4)) !important;
+}
+
+[class*="hover:shadow-[0_0_30px_rgba(0,243,255,0.4)]"]:hover {
+  box-shadow: 0 0 30px rgba(95, 141, 78, 0.3) !important;
+}
+
+[class*="hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"]:hover {
+  box-shadow: 0 0 30px rgba(139, 107, 74, 0.25) !important;
+}
+
+/* Section headings text-gradient override (light brown to chocolate) */
+.bg-gradient-to-r[class*="from-white"],
+.bg-gradient-to-r[class*="via-white"],
+.bg-gradient-to-r[class*="to-white"],
+.bg-gradient-to-r[class*="from-[var(--neon-blue)]"][class*="via-white"],
+[class*="bg-gradient-to-r"][class*="from-white"],
+[class*="bg-gradient-to-r"][class*="via-white"],
+[class*="bg-gradient-to-r"][class*="from-[var(--neon-blue)]"] {
+  background-image: linear-gradient(to right, #c79f73, #5c4033) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Soften drop shadows on headings */
+[class*="drop-shadow-[0_0_15px_"] {
+  filter: drop-shadow(0 0 15px rgba(139, 107, 74, 0.25)) !important;
+}
+
+/* Footer text visibility and hover overrides */
+footer {
+  background-color: var(--secondary-bg) !important;
+  border-top: 1px solid var(--glass-border) !important;
+}
+
+footer,
+footer :not(:hover) {
+  color: #000000 !important;
+}
+
+footer p {
+  color: #2F2F2F !important;
+}
+
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer h5,
+footer h6 {
+  color: var(--dark-brown) !important;
+}
+
+footer li:hover,
+footer span:hover,
+footer a:hover,
+footer .hover\:text-white:hover {
+  color: #3d2110 !important;
+  text-shadow: none !important;
+}
+
+/* Card Component Price and Rating Readability Overrides */
+.glass-card span.text-white,
+.glass-card [class*="group-hover:text-"],
+.glass-card span.text-gray-200 {
+  color: #3d2110 !important;
+}
+
+.glass-card:hover span.text-white,
+.glass-card:hover [class*="group-hover:text-"],
+.glass-card:hover span.text-gray-200 {
+  color: #3d2110 !important;
+}
+
+/* Rating tag wrapper - make it completely transparent (no bg, no borders) */
+.glass-card div[class*="border-white"] {
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Price and Rating label text */
+.glass-card span.text-gray-500 {
+  color: #5c4033 !important;
+  opacity: 0.8;
+}
+
+/* Ensure text gradients display correctly by forcing inline-block */
+h1[class*="text-transparent"],
+h2[class*="text-transparent"],
+span[class*="text-transparent"],
+[class*="text-transparent"] {
+  display: inline-block !important;
+}
+
+/* Reduce vertical gaps and paddings between landing page sections */
+.space-y-20 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0 !important;
+}
+
+/* Balance py-20 section paddings for a tighter layout */
+.py-20 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+/* Style dropdown select options for readability */
+select option {
+  background-color: var(--secondary-bg) !important;
+  color: var(--body-text) !important;
+}
+
+/* AI Hub Page Launch Tool visibility overrides */
+.ai-hub-page .glass span[class*="bg-clip-text"] {
+  background-image: none !important;
+  background: none !important;
+  -webkit-text-fill-color: #3d2110 !important;
+  color: #3d2110 !important;
+}
+
+.ai-hub-page .glass .mt-8 svg {
+  color: #3d2110 !important;
+}
+
+.ai-hub-page h3 {
+  color: var(--dark-brown) !important;
+}
+
+.ai-hub-page p.text-gray-400 {
+  color: var(--body-text) !important;
 }

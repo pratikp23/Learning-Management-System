@@ -391,7 +391,7 @@ function ViewCourse() {
                                 />
                                 <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-4 border-black"></div>
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">{creatorData?.name || "SkillUp Expert"}</h3>
+                            <h3 className="text-xl font-bold text-white mb-2">{creatorData?.name || "LearnAI Expert"}</h3>
                             <p className="text-gray-400 text-sm font-medium mb-6 line-clamp-3">{creatorData?.description || "Experienced educator dedicated to teaching real-world skills."}</p>
                             <div className="flex flex-col gap-2">
                                 <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Verified Contact</span>
