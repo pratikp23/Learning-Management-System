@@ -42,7 +42,7 @@ function Login() {
       toast.success("Login Successfully");
     } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Login failed");
+      toast.error(error?.response?.data?.message || error.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ function Login() {
       toast.success("Login Successfully");
     } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Google login failed");
+      toast.error(error?.response?.data?.message || error.message || "Google login failed");
     }
   };
 

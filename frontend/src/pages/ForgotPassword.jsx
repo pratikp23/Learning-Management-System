@@ -25,7 +25,7 @@ function ForgotPassword() {
       
     } catch (error) {
       console.log(error)
-      toast.error(error.response.data.message)
+      toast.error(error?.response?.data?.message || error.message || "Failed to send OTP")
       setLoading(false)
     }
     
@@ -41,7 +41,7 @@ function ForgotPassword() {
       setStep(3)
     } catch (error) {
       console.log(error)
-      toast.error(error.response.data.message)
+      toast.error(error?.response?.data?.message || error.message || "Failed to verify OTP")
       setLoading(false)
     }
     
@@ -50,6 +50,7 @@ function ForgotPassword() {
     setLoading(true)
     try {
       if(newpassword !== conPassword){
+        setLoading(false)
         return toast.error("password does not match")
       }
       const result = await axios.post(`${serverUrl}/api/auth/resetpassword` , {email,password:newpassword} , {withCredentials:true})
@@ -59,11 +60,27 @@ function ForgotPassword() {
       navigate("/login")
     } catch (error) {
       console.log(error)
-      toast.error(error.response.data.message)
+      toast.error(error?.response?.data?.message || error.message || "Failed to reset password")
       setLoading(false)
     }
     
    }
+
+   const handleSendMagicLink = async () => {
+       if (!email) {
+           return toast.error("Please enter your email address first");
+       }
+       setLoading(true);
+       try {
+           const result = await axios.post(`${serverUrl}/api/auth/send-magic-link`, { email }, { withCredentials: true });
+           toast.success(result.data.message || "Magic login link sent to your email!");
+       } catch (error) {
+           console.log(error);
+           toast.error(error?.response?.data?.message || error.message || "Failed to send magic link");
+       } finally {
+           setLoading(false);
+       }
+   };
 
 
   return (
@@ -73,7 +90,7 @@ function ForgotPassword() {
           Forgot Your Password?
         </h2>
 
-          <form  className="space-y-4">
+          <form  className="space-y-4" onSubmit={(e)=>e.preventDefault()}>
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Enter your email address
@@ -96,6 +113,21 @@ function ForgotPassword() {
               {loading?<ClipLoader size={30} color='white'/>:"Send OTP"}
             </button>
           </form>
+
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-4 text-gray-500 text-sm">OR</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+
+          <button
+            type="button"
+            className="w-full border border-black hover:bg-gray-50 text-black py-2 px-4 rounded-md font-medium cursor-pointer flex items-center justify-center gap-2"
+            disabled={loading}
+            onClick={handleSendMagicLink}
+          >
+            {loading ? <ClipLoader size={20} color="black" /> : "Email Me a Magic Login Link"}
+          </button>
         
 
         <div className="text-sm text-center mt-4 text-black cursor-pointer" onClick={()=>navigate("/login")} >

@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ForgotPassword from './pages/ForgotPassword'
+import LoginMagic from './pages/LoginMagic'
 import getCurrentUser from './customHooks/getCurrentUser'
 import { useSelector } from 'react-redux'
 import Profile from './pages/Profile'
@@ -82,6 +83,7 @@ function App() {
         <Route path='/createlecture/:courseId' element={userData?.role === "educator" ? <CreateLecture /> : <Navigate to={"/signup"} />} />
         <Route path='/editlecture/:courseId/:lectureId' element={userData?.role === "educator" ? <EditLecture /> : <Navigate to={"/signup"} />} />
         <Route path='/forgotpassword' element={<ForgotPassword />} />
+        <Route path='/login-magic' element={<LoginMagic />} />
       </Routes>
 
     </>

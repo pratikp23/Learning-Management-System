@@ -37,7 +37,8 @@ function Nav() {
       toast.success("LogOut Successfully");
       setShowPro(false);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
+      toast.error(error?.response?.data?.message || error.message || "Logout failed");
     }
   };
 

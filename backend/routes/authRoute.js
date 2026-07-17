@@ -34,7 +34,10 @@ import {
   resetPassword,
   sendOtp,
   signUp,
-  verifyOtp 
+  verifyOtp,
+  sendSignupOtp,
+  sendMagicLink,
+  loginMagic
 } from "../controllers/authController.js"
 
 const authRouter = express.Router()
@@ -52,6 +55,12 @@ authRouter.post("/sendotp", sendOtp)
 authRouter.post("/verifyotp", verifyOtp)
 
 authRouter.post("/resetpassword", resetPassword)
+
+authRouter.post("/send-signup-otp", sendSignupOtp)
+
+authRouter.post("/send-magic-link", sendMagicLink)
+
+authRouter.post("/login-magic", loginMagic)
 
 export default authRouter
 
