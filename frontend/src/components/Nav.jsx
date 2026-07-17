@@ -36,6 +36,7 @@ function Nav() {
       await dispatch(setUserData(null));
       toast.success("LogOut Successfully");
       setShowPro(false);
+      navigate("/");
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || error.message || "Logout failed");
